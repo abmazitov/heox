@@ -26,6 +26,6 @@ class Pipeline:
         :param steps: Number of steps to run for each method.
         """
         for step in range(steps):
-            for module, interval in zip(self.modules, self.intervals):
+            for module, interval in zip(self.modules, self.modules_intervals):
                 if step % interval == 0:
                     module.run(1)
