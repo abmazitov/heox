@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heox"
+version = "0.0.0"
+description = "A python package for manipulating and optimizing the high-entropy oxides"
+authors = [
+    { name = "Arslan Mazitov", email = "arslan.mazitov@epfl.ch" }
+]
+license = { text = "MIT" }
+dependencies = [
+    "ase",
+    "metatensor-torch==0.7.4"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+requires-python = ">=3.6"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 88
+exclude = ["__pycache__", "*.pyc", "*.pyo", ".env", ".venv", "build", "dist"]
