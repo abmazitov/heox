@@ -16,7 +16,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         atoms: Atoms,
         temperature: float,
         symbols: List[str],
-        chemical_potentials: List[float],
+        chemical_potentials: Dict[str, float],
         logging: bool = False,
         loginterval: int = 1,
         trajectory: Optional[str] = None,
@@ -27,7 +27,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         :param atoms: ASE Atoms object representing the system.
         :param temperature: Simulation temperature in Kelvin.
         :param symbols: List of allowed chemical symbols for insertion/deletion.
-        :param chemical_potentials: List of chemical potentials for each atomic type.
+        :param chemical_potentials: Dict of chemical potentials for each atomic type.
         """
         self.atoms = atoms
         self.temperature = temperature
@@ -70,7 +70,9 @@ class OnLatticeGrandCanonicalMonteCarlo:
         dE = final_energy - initial_energy
 
         # Metropolis criterion
-        if not self.metropolis_criterion(dE):
+        if not self.metropolis_criterion(
+            dE, chemical_potential=self.chemical_potentials[atomic_type]
+        ):
             self.atoms.pop()
             self.rejected_insertions += 1
             return False
