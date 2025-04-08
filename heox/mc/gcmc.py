@@ -132,9 +132,9 @@ class OnLatticeGrandCanonicalMonteCarlo:
         """
         for _ in range(steps):
             if np.random.rand() < 0.5:
-                self._random_insertion()
+                self.attemt_insertion()
             else:
-                self._random_deletion()
+                self.attempt_removal()
             if self.logging and self.step % self.loginterval == 0:
                 self.log()
             self.step += 1
