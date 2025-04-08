@@ -1,9 +1,11 @@
+import logging
+import time
+from typing import List, Optional
+
 import numpy as np
 from ase import Atoms
 from ase.units import kB
-from typing import List, Optional
-import time
-import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,9 +59,10 @@ class AtomSwapMonteCarlo:
         e = self.atoms.get_potential_energy()
         T = time.localtime()
         name = self.__class__.__name__
-        logger.info(
-            f"{name}: Step {self.step} | Time: {T.tm_hour}:{T.tm_min}:{T.tm_sec} | Energy: {e:.2f} eV | Accepted Swaps: {self.accepted} | Rejected Swaps: {self.rejected}"
-        )
+        info = f"{name}: Step {self.step} | Time: {T.tm_hour}:{T.tm_min}:{T.tm_sec} | "
+        info += f"Energy: {e:.2f} eV | "
+        info += f"Accepted: {self.accepted} | Rejected: {self.rejected}"
+        logger.info(info)
         if self.trajectory is not None:
             self.atoms.write(self.trajectory, append=True)
 

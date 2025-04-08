@@ -1,9 +1,11 @@
-from ase import Atoms, Atom
-import random
-from typing import List, Dict, Optional
-import numpy as np
-import time
 import logging
+import random
+import time
+from typing import Dict, List, Optional
+
+import numpy as np
+from ase import Atom, Atoms
+
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +54,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         Perform a random insertion of an atom into the lattice.
         """
         # Select a random atomic type based on chemical potentials
-        atomic_type = random.choice(self.atomic_types)
+        atomic_type = random.choice(self.symbols)
         empty_sites = self.insertion_allowed_atoms[atomic_type]
         if not empty_sites:
             return False
@@ -82,7 +84,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         Perform a random removal of an atom from the lattice.
         """
         # Select a random occupied site with an atomic type in the list
-        atomic_type = random.choice(self.atomic_types)
+        atomic_type = random.choice(self.symbols)
         occupied_indices = self.removal_allowed_indices[atomic_type]
         if not occupied_indices:
             return False
@@ -143,9 +145,12 @@ class OnLatticeGrandCanonicalMonteCarlo:
         e = self.atoms.get_potential_energy()
         T = time.localtime()
         name = self.__class__.__name__
-        info = f"{name}: Step {self.step} | Time: {T.tm_hour}:{T.tm_min}:{T.tm_sec} | Energy: {e:.2f} eV"
-        info += f" | Accepted Insertions: {self.accepted_insertions} | Rejected Insertions: {self.rejected_insertions}"
-        info += f" | Accepted Removals: {self.accepted_removals} | Rejected Removals: {self.rejected_removals}"
+        info = f"{name}: Step {self.step} | Time: {T.tm_hour}:{T.tm_min}:{T.tm_sec} | "
+        info += f"Energy: {e:.2f} eV | "
+        info += f"Accepted Insertions: {self.accepted_insertions} | "
+        info += f"Rejected Insertions: {self.rejected_insertions} | "
+        info += f"Accepted Removals: {self.accepted_removals} | "
+        info += f"Rejected Removals: {self.rejected_removals}"
         logger.info(info)
         if self.trajectory is not None:
             self.atoms.write(self.trajectory, append=True)

@@ -1,8 +1,10 @@
+from typing import Dict, Optional, Tuple
+
+import numpy as np
 from ase import Atoms
 from ase.build import bulk, sort
-from typing import Dict, Tuple, Optional
-import numpy as np
 from ase.spacegroup import crystal
+
 
 ANION_ELEMENT = "O"
 AVAILABLE_PATTERNS = ["rocksalt", "perovskite", "fluorite"]
@@ -62,8 +64,9 @@ def bulk_heo(
         if not (num_cations_sites * fraction).is_integer():
             raise ValueError(
                 f"Cannot create a bulk structure with {supercell} supercell and "
-                f"{symbol} composition of {fraction}. The supercell yields {num_cations_sites} "
-                "cation sites. Try either adjust the composition or use a different supercell."
+                f"{symbol} composition of {fraction}. The supercell yields "
+                f"{num_cations_sites} cation sites. Try either adjust the composition "
+                "or use a different supercell."
             )
     # Calculate the new composition for the cations
     num_cations = {k: int(v * num_cations_sites) for k, v in cation_composition.items()}
@@ -96,5 +99,6 @@ def generate_base_crystal_pattern(pattern: str, a: float = 5.0) -> Atoms:
         return bulk("CeO2", "fluorite", a=a, cubic=True)
     else:
         raise ValueError(
-            f"Pattern '{pattern}' is not recognized. Available patterns: {AVAILABLE_PATTERNS}"
+            f"Pattern '{pattern}' is not recognized. "
+            f"Available patterns: {AVAILABLE_PATTERNS}"
         )
