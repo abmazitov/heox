@@ -1,6 +1,6 @@
 from ase import Atoms, Atom
 import random
-from typing import List, Dict
+from typing import List, Dict, Optional
 import numpy as np
 import time
 import logging
@@ -17,6 +17,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         chemical_potentials: List[float],
         logging: bool = False,
         loginterval: int = 1,
+        trajectory: Optional[str] = None,
     ):
         """
         Initialize the GrandCanonicalMonteCarlo simulation on lattice.
@@ -44,6 +45,7 @@ class OnLatticeGrandCanonicalMonteCarlo:
         self.rejected_insertions = 0
         self.accepted_removals = 0
         self.rejected_removals = 0
+        self.trajectory = trajectory
 
     def attemt_insertion(self):
         """
@@ -145,3 +147,5 @@ class OnLatticeGrandCanonicalMonteCarlo:
         info += f" | Accepted Insertions: {self.accepted_insertions} | Rejected Insertions: {self.rejected_insertions}"
         info += f" | Accepted Removals: {self.accepted_removals} | Rejected Removals: {self.rejected_removals}"
         logger.info(info)
+        if self.trajectory is not None:
+            self.atoms.write(self.trajectory, append=True)

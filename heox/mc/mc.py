@@ -1,7 +1,7 @@
 import numpy as np
 from ase import Atoms
 from ase.units import kB
-from typing import List
+from typing import List, Optional
 import time
 import logging
 
@@ -16,7 +16,7 @@ class AtomSwapMonteCarlo:
         symbols: List[str],
         logging: bool = False,
         loginterval: int = 1,
-        **kwargs,
+        trajectory: Optional[str] = None,
     ):
         """
         Initialize the Monte Carlo simulation.
@@ -60,6 +60,8 @@ class AtomSwapMonteCarlo:
         logger.info(
             f"{name}: Step {self.step} | Time: {T.tm_hour}:{T.tm_min}:{T.tm_sec} | Energy: {e:.2f} eV | Accepted Swaps: {self.accepted} | Rejected Swaps: {self.rejected}"
         )
+        if self.trajectory is not None:
+            self.atoms.write(self.trajectory, append=True)
 
     def attempt_atomswap(self):
         """
