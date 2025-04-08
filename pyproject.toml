@@ -12,7 +12,6 @@ authors = [
 license = { text = "MIT" }
 dependencies = [
     "ase",
-    "metatensor-torch==0.7.4"
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
