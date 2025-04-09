@@ -21,6 +21,9 @@ class State:
             "calculator": atoms.calc,
         }
         properties = {
+            "global_step": 0
+            if atoms.info.get("global_step") is None
+            else atoms.info["global_step"],
             "step": 0 if atoms.info.get("step") is None else atoms.info["step"],
             "temperature": atoms.get_temperature(),
             "energy": atoms.get_potential_energy() if atoms._calc is not None else None,

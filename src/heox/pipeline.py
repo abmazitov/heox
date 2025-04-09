@@ -8,8 +8,8 @@ from .state import State
 logger = logging.getLogger(__name__)
 
 LOGGING_OPTIONS_DICT = {
-    "step": "Step",
-    "properties.step": "Global Step",
+    "properties.global_step": "Global Step",
+    "properties.step": "Step",
     "properties.energy": "Potential Energy",
     "properties.temperature": "Temperature",
 }
@@ -79,12 +79,14 @@ class Pipeline:
             for module in self.modules:
                 module.evolve(self.state)
             if self.log_options and step % self.loginterval == 0:
-                self.log(step)
+                self.log()
+            self.state.properties["global_step"] += 1
 
-    def log(self, step: int):
+    def log(self):
         """
         Log the current state of the simulation.
         """
+
         info = "\t".join([str(self.state.get(opt)) for opt in self.log_options])
         logger.info(info)
         if self.trajectory is not None:
