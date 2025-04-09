@@ -63,6 +63,16 @@ class OnLatticeGCMC(Protocol):
         else:
             self._attempt_removal(state)
         self.num_invokes += 1
+        state.update(
+            modules={
+                "mc.gcmc": {
+                    "accepted_insertions": self.accepted_insertions,
+                    "rejected_insertions": self.rejected_insertions,
+                    "accepted_removals": self.accepted_removals,
+                    "rejected_removals": self.rejected_removals,
+                }
+            }
+        )
 
     def _attempt_removal(self, state: State):
         """
@@ -126,6 +136,7 @@ class OnLatticeGCMC(Protocol):
             return
 
         index = random.choice(allowed_indices)
+        assert types[index] == "X", "The index should be an empty site."
 
         # Step 2. Attempt to add the atom to the lattice
 

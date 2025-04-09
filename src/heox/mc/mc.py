@@ -53,6 +53,14 @@ class AtomSwapMonteCarlo(Protocol):
     def step(self, state: State):
         self._attempt_atomswap(state)
         self.num_invokes += 1
+        state.update(
+            modules={
+                "mc.asmc": {
+                    "accepted_swaps": self.accepted_swaps,
+                    "rejected_swaps": self.rejected_swaps,
+                }
+            }
+        )
 
     def _attempt_atomswap(self, state: State):
         """

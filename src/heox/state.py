@@ -4,9 +4,15 @@ from ase import Atoms
 
 
 class State:
-    def __init__(self, system: Dict[str, Any], properties: Dict[str, Any]):
+    def __init__(
+        self,
+        system: Dict[str, Any],
+        properties: Dict[str, Any],
+        modules: Dict[str, Any],
+    ):
         self.system = system
         self.properties = properties
+        self.modules = modules
 
     @classmethod
     def from_atoms(cls, atoms: Atoms):
@@ -28,13 +34,16 @@ class State:
             "temperature": atoms.get_temperature(),
             "energy": atoms.get_potential_energy() if atoms._calc is not None else None,
         }
-        state = cls(system=system, properties=properties)
+
+        modules: Dict[str, Any] = {}
+        state = cls(system=system, properties=properties, modules=modules)
         return state
 
     def update(
         self,
         system: Optional[Dict[str, Any]] = None,
         properties: Optional[Dict[str, Any]] = None,
+        modules: Optional[Dict[str, Any]] = None,
     ):
         """
         Update the state with new system and properties.
@@ -43,6 +52,8 @@ class State:
             self.system.update(system)
         if properties is not None:
             self.properties.update(properties)
+        if modules is not None:
+            self.modules.update(modules)
 
     def get(self, option: str):
         option_type, option_name = option.split(".")
