@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # ASE files
-*.xyz
+*.xyz *.traj
 
 # Jupyter Notebook
 .ipynb_checkpoints
