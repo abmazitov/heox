@@ -8,7 +8,8 @@ from .state import State
 logger = logging.getLogger(__name__)
 
 LOGGING_OPTIONS_DICT = {
-    "properties.step": "Step",
+    "step": "Step",
+    "properties.step": "Global Step",
     "properties.energy": "Potential Energy",
     "properties.temperature": "Temperature",
 }
@@ -50,8 +51,10 @@ class Pipeline:
         """
         Print the initial logging line.
         """
-        header = "HEO-X: A Python package for hybrid Monte Carlo simulations of HEOs\n"
-        header += "\t".join([LOGGING_OPTIONS_DICT[opt] for opt in self.log_options])
+        logger.info(
+            "HEO-X: A Python package for hybrid Monte Carlo simulations of HEOs"
+        )
+        header = "\t".join([LOGGING_OPTIONS_DICT[opt] for opt in self.log_options])
         logger.info(header)
 
     def initialize(self):
@@ -76,9 +79,9 @@ class Pipeline:
             for module in self.modules:
                 module.evolve(self.state)
             if self.log_options and step % self.loginterval == 0:
-                self.log()
+                self.log(step)
 
-    def log(self):
+    def log(self, step: int):
         """
         Log the current state of the simulation.
         """
