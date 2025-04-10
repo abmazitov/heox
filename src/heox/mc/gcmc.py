@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 class OnLatticeGCMC(Protocol):
     def __init__(
         self,
+        name: str,
         temperature: float,
         chemical_potentials: Dict[str, float],
         use_relaxed_energies: bool = False,
@@ -32,7 +33,7 @@ class OnLatticeGCMC(Protocol):
         :param invoke_every: Invoke this protocol every n steps.
         :param steps_per_invoke: Number of steps to run for each method.
         """
-        super().__init__(invoke_every, steps_per_invoke)
+        super().__init__(name, invoke_every, steps_per_invoke)
         self.temperature = temperature
         self.chemical_potentials = chemical_potentials
         self.types = list(chemical_potentials.keys())
@@ -180,3 +181,11 @@ class OnLatticeGCMC(Protocol):
             -(delta_energy - chemical_potential) / (self.temperature)
         )
         return np.random.rand() < boltzmann_factor
+
+    def _get_log_options(self):
+        return {
+            f"module.{self.name}.accepted_insertions": self.accepted_insertions,
+            f"module.{self.name}.rejected_insertions": self.rejected_insertions,
+            f"module.{self.name}.accepted_removals": self.accepted_removals,
+            f"module.{self.name}.rejected_removals": self.rejected_removals,
+        }

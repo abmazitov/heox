@@ -7,7 +7,7 @@ from .state import State
 
 logger = logging.getLogger(__name__)
 
-LOGGING_OPTIONS_DICT = {
+BASE_LOGGING_OPTIONS_DICT = {
     "properties.global_step": "Global Step",
     "properties.step": "Step",
     "properties.energy": "Potential Energy",
@@ -35,16 +35,10 @@ class Pipeline:
         """
         self.state = state
         self.modules = modules
-        if log_options is not None:
-            for logname in log_options:
-                if logname not in LOGGING_OPTIONS_DICT:
-                    raise ValueError(
-                        f"Invalid logging name: {logname}. "
-                        f"Available options are: {list(LOGGING_OPTIONS_DICT.keys())}"
-                    )
-        self.log_options = log_options
+
         self.loginterval = loginterval if loginterval else 1
         self.trajectory = trajectory
+        self.log_options = log_options
         self.initialize()
 
     def _print_logging_header(self):
@@ -54,17 +48,26 @@ class Pipeline:
         logger.info(
             "HEO-X: A Python package for hybrid Monte Carlo simulations of HEOs"
         )
-        header = "\t".join([LOGGING_OPTIONS_DICT[opt] for opt in self.log_options])
+        header = "\t".join([BASE_LOGGING_OPTIONS_DICT[opt] for opt in self.log_options])
         logger.info(header)
 
     def initialize(self):
         """
         Initialize the pipeline by setting up the modules.
         """
+        log_options_dict = BASE_LOGGING_OPTIONS_DICT.copy()
         for module in self.modules:
             module.initialize(self.state)
+            log_options_dict.update(module._get_log_options())
+
         if self.log_options:
             self._print_logging_header()
+            for logname in self.log_options:
+                if logname not in log_options_dict:
+                    raise ValueError(
+                        f"Invalid logging name: {logname}. "
+                        f"Available options are: {list(log_options_dict.keys())}"
+                    )
         if self.trajectory is not None:
             if os.path.exists(os.path.abspath(self.trajectory)):
                 os.remove(self.trajectory)

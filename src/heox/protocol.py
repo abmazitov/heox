@@ -2,7 +2,7 @@ from .state import State
 
 
 class Protocol:
-    def __init__(self, invoke_every: int, steps_per_invoke: int):
+    def __init__(self, name: str, invoke_every: int, steps_per_invoke: int):
         """
         Initialize the Protocol class.
 
@@ -12,6 +12,7 @@ class Protocol:
         self.invoke_every = invoke_every
         self.steps_per_invoke = steps_per_invoke
         self.num_invokes = 0
+        self.name = name
 
     def initialize(self, state: State):
         """
@@ -35,3 +36,9 @@ class Protocol:
             for _ in range(self.steps_per_invoke):
                 self.step(state)
         state.properties["step"] += 1
+
+    def _get_log_options(self):
+        """
+        Get the log options for the protocol.
+        """
+        pass

@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 class AtomSwapMonteCarlo(Protocol):
     def __init__(
         self,
+        name: str,
         temperature: float,
         types: List[str],
         invoke_every: int = 1,
@@ -29,7 +30,7 @@ class AtomSwapMonteCarlo(Protocol):
         :param steps_per_invoke: Number of steps to run for each method.
 
         """
-        super().__init__(invoke_every, steps_per_invoke)
+        super().__init__(name, invoke_every, steps_per_invoke)
         self.temperature = temperature
         self.types = types
         if len(types) < 2:
@@ -114,3 +115,9 @@ class AtomSwapMonteCarlo(Protocol):
         else:
             probability = np.exp(-delta_energy / (kB * self.temperature))
             return np.random.rand() < probability
+
+    def _get_log_options(self):
+        return {
+            f"module.{self.name}.accepted_swaps": self.accepted_swaps,
+            f"module.{self.name}.rejected_swaps": self.rejected_swaps,
+        }
