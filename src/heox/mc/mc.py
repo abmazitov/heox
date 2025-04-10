@@ -85,9 +85,7 @@ class AtomSwapMonteCarlo(Protocol):
             return
 
         # Step 2. Calculating the energy change upon swapping
-        initial_energy = state.get("properties.energy")
-        if initial_energy is None:
-            initial_energy = calculate_potential_energy(state)
+        initial_energy = calculate_potential_energy(state)
 
         attempt_types = types.copy()
         attempt_types[atom_index_1], attempt_types[atom_index_2] = symbol_2, symbol_1

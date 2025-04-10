@@ -93,9 +93,7 @@ class OnLatticeGCMC(Protocol):
 
         # Step 2. Attempt to remove the atom from the lattice
 
-        initial_energy = state.get("properties.energy")
-        if initial_energy is None:
-            initial_energy = calculate_potential_energy(state)
+        initial_energy = calculate_potential_energy(state)
 
         attempt_types = types.copy()
         attempt_types[index] = "X"  # Placeholder for empty site
@@ -141,9 +139,7 @@ class OnLatticeGCMC(Protocol):
 
         # Step 2. Attempt to add the atom to the lattice
 
-        initial_energy = state.get("properties.energy")
-        if initial_energy is None:
-            initial_energy = calculate_potential_energy(state)
+        initial_energy = calculate_potential_energy(state)
 
         attempt_types = types.copy()
         attempt_types[index] = atomic_type
